@@ -1,0 +1,49 @@
+name: coreapis
+
+on:
+  push:
+    branches: [ "main" ]
+  
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    continue-on-error: false
+    container: 
+      image: kirankumarsivapuram/base_image:3.0             
+
+    steps:
+    - uses: actions/checkout@v3           
+    - name: az login
+      run: |
+        az login --service-principal -u ${{secrets.user}} -p ${{secrets.password}} -t "5461eb53-e0fd-4320-92ff-c6efe1fe91e9"    
+    - name: build docker image
+      run: |
+        cd ./EmployeeAPI/
+        docker build . -t employeeapi
+        cd ..
+    - name: set subscription
+      run: az account set --subscription "e64d2b7e-f9cf-4177-afb5-b4eb654ca3cb"
+    - name: azure container registry login
+      run: |
+        az acr login -n "testacrpoc08112023" -u ${{secrets.user}} -p ${{secrets.password}}
+    - name: create docker tag
+      shell: pwsh
+      run: |
+        $BuildId= ${{github.run_id}}
+        $ImageTag=Get-Date -Format "MM-dd-yyyy_$BuildId"
+        #$ImageTag= "v1.0"
+        echo "$ImageTag"
+        Write-Host "$ImageTag"
+        $registryname="testacrpoc08112023"
+        #$imagename="demo_image:" + "$ImageTag"
+        $imagename="demo_image:"
+        $acrfqdn="$registryname.azurecr.io/$imagename" + "$ImageTag"        
+        write-output "az container registry deployment"        
+        docker tag demo_image $acrfqdn
+        docker images
+        write-host "pushing to acr"
+        docker push $acrfqdn
+        write-host "logging out of azure"
+        az logout
