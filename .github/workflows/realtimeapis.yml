@@ -37,11 +37,11 @@ jobs:
         echo "$ImageTag"
         Write-Host "$ImageTag"
         $registryname="testacrpoc08112023"
-        #$imagename="demo_image:" + "$ImageTag"
+        #$imagename="employeeapi:" + "$ImageTag"
         $imagename="employeeapi:"
         $acrfqdn="$registryname.azurecr.io/$imagename" + "$ImageTag"        
         write-output "az container registry deployment"        
-        docker tag demo_image $acrfqdn
+        docker tag employeeapi $acrfqdn
         docker images
         write-host "pushing to acr"
         docker push $acrfqdn
