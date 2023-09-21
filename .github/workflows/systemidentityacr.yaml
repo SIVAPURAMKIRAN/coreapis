@@ -1,0 +1,38 @@
+name: loginacrwithsystemidentity
+
+on:
+  push:
+    branches: [ "main" ]
+  
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    continue-on-error: false
+    container: 
+      image: kirankumarsivapuram/base_image:3.0             
+
+    steps:
+    - uses: actions/checkout@v3           
+    - name: az login
+      run: |
+        az login --service-principal -u ${{secrets.user}} -p ${{secrets.password}} -t "5461eb53-e0fd-4320-92ff-c6efe1fe91e9"    
+    - name: build docker image
+      run: |
+        cd ./EmployeeAPI/
+        docker build . -t employeeapi
+        cd ..
+    - name: set subscription
+      run: az account set --subscription "e64d2b7e-f9cf-4177-afb5-b4eb654ca3cb"
+    - name: azure container registry login
+      shell: pwsh
+      run: |
+         $ACR_REGISTRY_ID=$(az acr show --name systemasignacr --query "id" --output tsv)
+         write-host "registry id : $ACR_REGISTRY_ID"
+         $SERVICE_PRINCIPAL_NAME=b54b69cb-9c4e-4a5b-9f0e-55e0ec22328a
+         $PASSWORD=$(az ad sp create-for-rbac --name $SERVICE_PRINCIPAL_NAME --scopes $ACR_REGISTRY_ID --role acrpull --query "password" --output tsv)
+         $USER_NAME=$(az ad sp list --display-name $SERVICE_PRINCIPAL_NAME --query "[].appId" --output tsv)
+         write-output "user id : $USER_NAME"
+         write-output "user id : $PASSWORD"
+    
