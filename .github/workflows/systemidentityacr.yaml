@@ -27,8 +27,8 @@ jobs:
          echo "registry id : $ACR_REGISTRY_ID"
          write-host "registry id : $ACR_REGISTRY_ID"
          $SERVICE_PRINCIPAL_NAME="b54b69cb-9c4e-4a5b-9f0e-55e0ec22328a"
-         $PASSWORD=$(az ad sp create-for-rbac --name $SERVICE_PRINCIPAL_NAME --scopes $ACR_REGISTRY_ID --role acrpull --query "password" --output tsv)
-         $USER_NAME=$(az ad sp list --display-name $SERVICE_PRINCIPAL_NAME --query "[].appId" --output tsv)
+         $PASSWORD=$(az ad sp create-for-rbac --name b54b69cb-9c4e-4a5b-9f0e-55e0ec22328a --scopes $ACR_REGISTRY_ID --role acrpull --query "password" --output tsv)
+         $USER_NAME=$(az ad sp list --display-name b54b69cb-9c4e-4a5b-9f0e-55e0ec22328a --query "[].appId" --output tsv)
          write-output "user id : $USER_NAME"
          write-output "user id : $PASSWORD"
     
