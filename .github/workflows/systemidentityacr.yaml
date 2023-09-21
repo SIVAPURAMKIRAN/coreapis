@@ -25,7 +25,7 @@ jobs:
       run: |
          $ACR_REGISTRY_ID=$(az acr show --name systemasignacr --query "id" --output tsv)
          echo "registry id : $ACR_REGISTRY_ID"  
-         $PASSWORD=$(az ad sp create-for-rbac --name ${{secrets.serviceprinciple}} --scopes $ACR_REGISTRY_ID --role acrpull --query "password" --output tsv)
+         $PASSWORD=$(az ad sp create-for-rbac --name ${{secrets.serviceprinciple}} --scopes $ACR_REGISTRY_ID --query "password" --output tsv)
          $USER_NAME=$(az ad sp list --display-name ${{secrets.serviceprinciple}} --query "[].appId" --output tsv)
          echo "user name is:  $USER_NAME"
          echo "password is:  $PASSWORD"
