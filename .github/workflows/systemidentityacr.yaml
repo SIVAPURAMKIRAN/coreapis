@@ -8,7 +8,7 @@ on:
 jobs:
   build:
 
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     continue-on-error: false
     container: 
       image: kirankumarsivapuram/base_image:3.0             
