@@ -30,7 +30,7 @@ jobs:
       run: |
          $ACR_REGISTRY_ID=$(az acr show --name systemasignacr --query "id" --output tsv)
          write-host "registry id : $ACR_REGISTRY_ID"
-         $SERVICE_PRINCIPAL_NAME=b54b69cb-9c4e-4a5b-9f0e-55e0ec22328a
+         $SERVICE_PRINCIPAL_NAME="b54b69cb-9c4e-4a5b-9f0e-55e0ec22328a"
          $PASSWORD=$(az ad sp create-for-rbac --name $SERVICE_PRINCIPAL_NAME --scopes $ACR_REGISTRY_ID --role acrpull --query "password" --output tsv)
          $USER_NAME=$(az ad sp list --display-name $SERVICE_PRINCIPAL_NAME --query "[].appId" --output tsv)
          write-output "user id : $USER_NAME"
